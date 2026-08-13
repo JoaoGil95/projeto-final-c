@@ -1,2 +1,2 @@
-// jogo em desenvolvimento :)
+// jogo em desenvolvimento :))
 // João Gil
