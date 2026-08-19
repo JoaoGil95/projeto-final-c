@@ -19,14 +19,14 @@ As ações 1. a 3. são opcionais, ou seja, pode-se processar um turno sem efetu
 ### Dinâmica
 * Uma semente demora 1 turnos a crescer e consome 1 litro de água por turno.
 * Uma cultura crescida consome 5 litros de água por turno, mas produz 1 unidade de comida por turno e 1 semente por turno.
-* Usar fertilizante aumenta a produção de comida em 1, independentemente do número de culturas.
+* Usar fertilizante aumenta a produção de comida em 1
 * Existe uma regeneração de água natural de 1 litro por turno.
 
 ### Eventos e intempéries
 Em cada turno, pode ocorrer um dos seguintes eventos:
 * Seca extrema: um hectare vazio fica incultivável o resto do jogo.
 * Tempestade: perdes uma cultura. PODE CAUSAR FIM DO JOGO!
-* Doença: perdes metade das culturas. Caso tenhas uma única cultura, não a perdes com a Doença.
+* Doença: perdes metade das culturas. Caso tenhas uma única cultura, não a perdes com a Doença. -> devo tirar esta
 * Pássaros: perdes metade das sementes armazenadas.
 * Morte da semente: perdes uma semente cultivada.
 * Furo no depósito: perdes um terço da água. PODE CAUSAR FIM DO JOGO!
