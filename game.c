@@ -1,15 +1,12 @@
-#include <stdio.h>
-#include <unistd.h>  //para sleep()
-#include <stdbool.h> //booleans
-#include <stdlib.h>  // rand() e srand()
-#include <time.h>    // time()
+#include "configuracoes.h"
 
 //---variáveis---//
-int opcao_menu;     // opção menu principal
-int opcao_melhoria; // opção das melhorias
-int turno;          // turno do jogo
-char quinta[3][3];  // a quinta
-int evento;         // escolher o evento/intempérie
+int opcao_menu;                // opção menu principal
+int opcao_melhoria;            // opção das melhorias
+int turno;                     // turno do jogo
+char quinta[TAMANHO][TAMANHO]; // a quinta
+int evento;                    // escolher o evento/intempérie
+int pontuacao;                 // pontuação final do jogo
 
 int contador_culturas; // para contar as culturas no terreno
 int sementes;          // sementes na quinta
@@ -25,6 +22,7 @@ int comida;       // unidades de comida
 int regen_comida; // regeneração de comida
 bool divino;      // proteção divina
 
+//-coisas a fazer (se tiver tempo)-//
 // variáveis de produção com define
 // define chuva - regeneração natural
 // define os vários custos das melhorias
@@ -32,28 +30,27 @@ bool divino;      // proteção divina
 
 //---listagem das funções---//
 // funções recorrentes do jogo
-void iniciar_quinta(char quinta[3][3]);
-void print_quinta(char quinta[3][3]);
+void iniciar_quinta(char quinta[TAMANHO][TAMANHO]);
+void print_quinta(char quinta[TAMANHO][TAMANHO]);
 void specs_quinta(void);
-void analisar_quinta(char quinta[3][3]);
-void crescer_sementes(char quinta[3][3]);
+void analisar_quinta(char quinta[TAMANHO][TAMANHO]);
+void crescer_sementes(char quinta[TAMANHO][TAMANHO]);
 
 // funções do menu (ações do jogo)
-void plantar_semente(char quinta[3][3]); // planta uma semente
-void usar_fertilizante();
+void plantar_semente(char quinta[TAMANHO][TAMANHO]); // planta uma semente
+void usar_fertilizante(void);
 void melhorias(void);
 void recursos_quinta(void); // faz todas as ações necessárias
 
 // funções aleatórias do jogo (eventos e intempéries)
 int evento_intemperie(void);
-
-// void seca(char quinta[3][3]);
-// void tempestade(char quinta[3][3]);
+void seca(char quinta[TAMANHO][TAMANHO]);
+void tempestade(char quinta[TAMANHO][TAMANHO]);
 void passaros(void);
-// void furo_deposito(void);
+void furo_deposito(void);
 
-// função de finalização do jogo
-//  void fim_do_jogo; //calcula pontuação
+// função de pontuação do jogo
+void fim_do_jogo(void); // calcula pontuação
 
 //***---O JOGO---***//
 int main(void)
@@ -139,18 +136,19 @@ int main(void)
             usar_fertilizante();
             break;
 
-        case 3:
+        case 3: // menu melhorias
             melhorias();
             break;
 
-        case 4:
+        case 4: // processar turno
             analisar_quinta(quinta);
+            crescer_sementes(quinta);
             recursos_quinta();
             // eventos e intempéries
             int evento = evento_intemperie();
             if (divino == true)
             {
-                evento = 0;
+                evento = ID_SEM_EVENTO;
                 printf("Safaste-te da intempérie.\n");
                 divino = false;
             }
@@ -158,37 +156,41 @@ int main(void)
             {
                 switch (evento)
                 {
-                case 1:
-                    // tempestade
+                case ID_TEMPESTADE:
+                    tempestade(quinta);
                     break;
 
-                case 2:
-                    // seca
+                case ID_SECA:
+                    seca(quinta);
                     break;
 
-                case 3:
+                case ID_PASSAROS:
                     passaros();
                     break;
 
-                case 4:
-                    // furo depósito
+                case ID_FURO:
+                    furo_deposito();
                     break;
 
                 default:
                     break;
                 }
             }
-
+            analisar_quinta(quinta);
             // verificar condições de fim de jogo
             if (agua <= 0)
             {
                 printf("FICASTE SEM ÁGUA!!! FIM DO JOGO\n");
-                // calcula pontuação
+                fim_do_jogo();
                 return 0;
             }
-            // crescer sementes
-            crescer_sementes(quinta);
-            analisar_quinta(quinta);
+
+            if (contador_culturas == 0)
+            {
+                printf("PERDESTE AS CULTURAS TODAS!!! FIM DO JOGO\n");
+                fim_do_jogo();
+                return 0;
+            }
             turno++;
             break;
 
@@ -209,23 +211,24 @@ int main(void)
 }
 //---***FIM DO JOGO***---//
 
-void iniciar_quinta(char quinta[3][3])
+void iniciar_quinta(char quinta[TAMANHO][TAMANHO])
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < TAMANHO; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < TAMANHO; j++)
         {
-            quinta[i][j] = '.';
+            quinta[i][j] = HECTARE_VAZIO;
         }
     }
-    quinta[0][0] = 'C';
-    sementes = 10;
-    agua = 100000;
-    capacidade_agua = 200000000;
-    fertilizante = 1;
-    comida = 2;
-    regen_agua = 1; // lençóis freáticos
+    quinta[0][0] = HECTARE_CULTURA;
+    sementes = SEMENTES_INICIAL;
+    agua = AGUA_INICIAL;
+    capacidade_agua = DEPOSITO_INICIAL;
+    fertilizante = FERTILIZANTE_INICIAL;
+    comida = COMIDA_INICIAL;
+    regen_agua = REGEN_AGUA_INICIAL;
     turno = 1;
+    divino = false;
 }
 
 void specs_quinta(void)
@@ -239,12 +242,12 @@ void specs_quinta(void)
            regen_agua - consumo_agua, regen_comida, regen_sementes);
 }
 
-void print_quinta(char quinta[3][3])
+void print_quinta(char quinta[TAMANHO][TAMANHO])
 {
     printf("\n");
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < TAMANHO; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < TAMANHO; j++)
         {
             printf("[%c]", quinta[i][j]);
         }
@@ -252,22 +255,22 @@ void print_quinta(char quinta[3][3])
     }
 }
 
-void plantar_semente(char quinta[3][3])
+void plantar_semente(char quinta[TAMANHO][TAMANHO]) // planta a semente no primeiro hectare vazio
 {
     if (sementes <= 0)
     {
         printf("Sem sementes.\n");
         return;
     }
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < TAMANHO; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < TAMANHO; j++)
         {
-            if (quinta[i][j] == '.')
+            if (quinta[i][j] == HECTARE_VAZIO)
             {
-                quinta[i][j] = 's';
+                quinta[i][j] = HECTARE_SEMENTE;
                 sementes--;
-                agua--;
+                agua -= CONSUMO_AGUA_SEMENTE;
                 return; // Sai da função logo após plantar a primeira
             }
         }
@@ -279,7 +282,7 @@ void usar_fertilizante(void)
 {
     if (fertilizante > 0)
     {
-        regen_comida++;
+        regen_comida += REGEN_COMIDA_FERTILIZANTE;
         fertilizante--;
         return;
     }
@@ -292,10 +295,10 @@ void melhorias(void)
     {
         // mostrar menu
         printf("\nMelhoria:\n");
-        printf("1. Regadio: +2 regen. água. Custa 2 comidas.\n");
-        printf("2. Depósito melhorado: +10 capacidade de água. Custa 4 comidas.\n");
-        printf("3. Saco fertilizante. +1 regen. comida. Custa 1 comida.\n");
-        printf("4. Proteção divina. Protege-te de qualquer intempérie num turno. Custa 10 comidas.\n");
+        printf("1. Regadio: +%d regen. água. Custa %d comidas.\n", AGUA_REGADIO, CUSTO_REGADIO);
+        printf("2. Depósito melhorado: +%d capacidade de água. Custa %d comidas.\n", CAPACIDADE_DEPOSITO, CUSTO_DEPOSITO);
+        printf("3. Saco fertilizante. +%d regen. comida. Custa %d comida.\n", COMIDA_FERTILIZANTE, CUSTO_FERTILIZANTE);
+        printf("4. Proteção divina. Protege-te de qualquer intempérie num turno. Custa %d comidas.\n", CUSTO_DIVINO);
         printf("0. Voltar à quinta\n");
 
         scanf("%d", &opcao_melhoria);
@@ -303,48 +306,49 @@ void melhorias(void)
 
         switch (opcao_melhoria)
         {
-        case 1:             // regadio
-            if (comida < 2) // depois tenho de alterar isto para um custo fixo do regadio
+        case 1: // regadio
+            if (comida < CUSTO_REGADIO)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
-            regen_agua += 2;
-            comida -= 2;
+            regen_agua += AGUA_REGADIO;
+            comida -= CUSTO_REGADIO;
             break;
 
-        case 2:             // depósito
-            if (comida < 4) // depois tenho de alterar isto para um custo fixo do depósito
+        case 2: // depósito
+            if (comida < CUSTO_DEPOSITO)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
-            capacidade_agua += 10;
-            comida -= 4;
+            capacidade_agua += CAPACIDADE_DEPOSITO;
+            comida -= CUSTO_DEPOSITO;
             break;
 
-        case 3:             // saco fertilizante
-            if (comida < 1) // depois tenho de alterar isto para um custo fixo do fertilizante
+        case 3: // saco fertilizante
+            if (comida < CUSTO_FERTILIZANTE)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
-            fertilizante++;
-            comida--;
+            fertilizante += COMIDA_FERTILIZANTE;
+            comida -= CUSTO_FERTILIZANTE;
             break;
 
         case 4: // proteção divina
-            if (divino == false && comida >= 10)
+            if (divino == false && comida >= CUSTO_DIVINO)
             {
                 divino = true;
+                comida -= CUSTO_DIVINO;
                 break;
             }
-            else if (comida < 10) // depois tenho de alterar isto para um custo fixo do fertilizante
+            else if (comida < CUSTO_DIVINO)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
-            else if (divino == true) // depois tenho de alterar isto para um custo fixo do fertilizante
+            else if (divino == true)
             {
                 printf("Já estás protegido.\n");
                 break;
@@ -361,23 +365,23 @@ void melhorias(void)
     }
 }
 
-void analisar_quinta(char quinta[3][3]) // ver o que têm os hectares de terreno
+void analisar_quinta(char quinta[TAMANHO][TAMANHO]) // ver o que têm os hectares de terreno
 {
-    // analisa a quinta
+    // conta as culturas
     contador_culturas = 0;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < TAMANHO; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < TAMANHO; j++)
         {
-            if (quinta[i][j] == 'C')
+            if (quinta[i][j] == HECTARE_CULTURA)
             {
                 contador_culturas++;
             }
         }
     }
-    consumo_agua = contador_culturas * 3;
-    regen_comida = contador_culturas * 1;
-    regen_sementes = contador_culturas * 1;
+    consumo_agua = contador_culturas * CONSUMO_AGUA_CULTURA;
+    regen_comida = contador_culturas * REGEN_COMIDA_CULTURA;
+    regen_sementes = contador_culturas * REGEN_SEMENTES_CULTURA;
 }
 
 void recursos_quinta(void)
@@ -396,40 +400,39 @@ void recursos_quinta(void)
 
 int evento_intemperie(void)
 {
-    // Gera um número entre 1 e 100
-    int evento = (rand() % 100) + 1;
+    int evento = (rand() % 100) + 1; // gera um número entre 1 e 100
 
-    if (evento <= 50)
+    if (evento <= PROB_SEM_EVENTO) // não ocorre nenhum evento
     {
-        return 0; // 50%
+        return ID_SEM_EVENTO; // 50%
     }
-    else if (evento <= 70)
+    else if (evento <= PROB_TEMPESTADE)
     {
-        return 1; // 20%; vai ser usada para tempestade
+        return ID_TEMPESTADE; // 20%; vai ser usada para tempestade
     }
-    else if (evento <= 80)
+    else if (evento <= PROB_SECA)
     {
-        return 2; // 10%; vai ser usada para seca
+        return ID_SECA; // 10%; vai ser usada para seca
     }
-    else if (evento <= 90)
+    else if (evento <= PROB_PASSAROS)
     {
-        return 3; // 10%; vai ser usado para pássaros
+        return ID_PASSAROS; // 10%; vai ser usado para pássaros
     }
-    else
+    else if (evento <= PROB_FURO)
     {
-        return 4; // 10%; furo no depósito
+        return ID_FURO; // 10%; furo no depósito
     }
 }
 
-void crescer_sementes(char quinta[3][3]) // ver o que têm os hectares de terreno
+void crescer_sementes(char quinta[TAMANHO][TAMANHO]) // crescer as sementes no turno seguinte
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < TAMANHO; i++)
     {
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < TAMANHO; j++)
         {
-            if (quinta[i][j] == 's')
+            if (quinta[i][j] == HECTARE_SEMENTE)
             {
-                quinta[i][j] = 'C';
+                quinta[i][j] = HECTARE_CULTURA;
             }
         }
     }
@@ -437,6 +440,53 @@ void crescer_sementes(char quinta[3][3]) // ver o que têm os hectares de terren
 
 void passaros(void)
 {
-    printf("Um bando de pássaros atacou o celeiro! Perdeste metade das sementes.\n");
-    sementes /= 2;
+    printf("Um bando de pássaros roubou metade das sementes.\n");
+    sementes /= DANO_PASSAROS;
+}
+
+void seca(char quinta[TAMANHO][TAMANHO])
+{
+    printf("As temperaturas altas causaram uma seca num hectare do terreno.\n");
+    for (int i = 0; i < TAMANHO; i++)
+    {
+        for (int j = 0; j < TAMANHO; j++)
+        {
+            if (quinta[i][j] == HECTARE_VAZIO)
+            {
+                quinta[i][j] = HECTARE_SECO;
+                return; // Sai da função logo após causar a seca
+            }
+        }
+    }
+}
+
+void furo_deposito(void)
+{
+    printf("Um furo no depósito fez-te perder um terço da água.\n");
+    agua = (agua * DANO_FURO_NUM) / DANO_FURO_DEN; // se fizer *2/3, assumo que é 0 e perde-se logo o jogo
+}
+
+void tempestade(char quinta[TAMANHO][TAMANHO])
+{
+    if (contador_culturas > 0)
+    {
+        printf("Uma tempestade tirou-te uma cultura.\n");
+        for (int i = 0; i < TAMANHO; i++)
+        {
+            for (int j = 0; j < TAMANHO; j++)
+            {
+                if (quinta[i][j] == HECTARE_CULTURA)
+                {
+                    quinta[i][j] = HECTARE_VAZIO;
+                    return; // Sai da função logo após causar a tempestade
+                }
+            }
+        }
+    }
+}
+
+void fim_do_jogo(void)
+{
+    pontuacao = turno * PESO_TURNO + comida * PESO_COMIDA;
+    printf("PONTUAÇÃO FINAL: %d pontos\n", pontuacao);
 }
