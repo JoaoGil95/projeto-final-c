@@ -63,7 +63,7 @@ Testar o funcionamento do git.
 ☝️ Condensar e organizar funções em ficheiros .c e .h\
 ☝️ Testes finais de robustez do jogo (verificação de loops infinitos, números sem lógica, funções mal implementadas, etc.)\
 ☝️ Afinamento das dinâmicas (valores iniciais, probabilidades dos eventos/intempéries)\
-☝️ Embelezamento do jogo (cores, layout do texto, mensagens do jogo, etc.)\
+☝️ Embelezamento do jogo (cores, layout do texto, mensagens do jogo, etc.)
 
 **💻Linhas de código escritas hoje (estimativa):**\
-75-100\
+75-100
