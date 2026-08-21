@@ -51,13 +51,13 @@ Testar o funcionamento do git.
 👍 Atualização do README.\
 
 **💪Maior dificuldade encontrada e como resolvi (ou não resolvi):**\
-🔴 Integrar as várias funções e variáveis em ficheiros .c ou .h -> Não implementado\
-✅ Usar #define ou constantes -> Implementado\
+🔴 Integrar as várias funções e variáveis em ficheiros .c ou .h -> *Não implementado*\
+✅ Usar #define ou constantes -> *Implementado*\
 ✅ Perceber quais as variáveis e funções que necessito -> resolvido (a não ser que necessite de mais funções entretanto)\
-✅ Eventos "Tempestade", "Furo depósito" e "Seca" ->  implementado\
-🔴 Dinâmica do jogo; perceber as condições iniciais, probabilidades dos eventos e custos/regenerações/consumos mais adequados para tornar o jogo equilibrado (nem demasiado dificil, nem demasiado fácil) -> parcialmente resolvido\
-✅ Cálculo da pontuação do jogo -> implementado\
-🔴 Cores no terminal -> não implementado (não é prioritário)\
+✅ Eventos "Tempestade", "Furo depósito" e "Seca" ->  *Implementado*\
+🔴 Dinâmica do jogo; perceber as condições iniciais, probabilidades dos eventos e custos/regenerações/consumos mais adequados para tornar o jogo equilibrado (nem demasiado dificil, nem demasiado fácil) -> *parcialmente resolvido*\
+✅ Cálculo da pontuação do jogo -> *Implementado*\
+🔴 Cores no terminal -> *não implementado* (não é prioritário)\
 
 **🔜Próximo passo planeado:**\
 ☝️ Condensar e organizar funções em ficheiros .c e .h\
