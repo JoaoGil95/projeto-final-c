@@ -449,3 +449,4 @@ void fim_do_jogo(void)
     pontuacao = turno * PESO_TURNO + comida * PESO_COMIDA;
     printf("PONTUAÇÃO FINAL: %d pontos\n", pontuacao);
 }
+//---//
