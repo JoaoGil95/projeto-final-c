@@ -1,5 +1,5 @@
 # Quinta da Sobrevivência
-Sê bem-vindo(a) ao jogo da Quinta da Sobrevivência. Este jogo consiste em gerir uma quinta com culturas que produzem comida e resistir a eventos e intempéries. Terás água, sementes e fertilizante para crescer as tuas culturas e podes fazer melhorias na quinta.
+Sê bem-vindo(a) ao jogo da Quinta da Sobrevivência. Este jogo consiste em gerir uma quinta com culturas que produzem comida e resistir a eventos e intempéries. Terás água, sementes e fertilizante para crescer as tuas culturas e podes fazer melhorias na quinta. Boa sorte!
 
 ## Objetivo
 O objetivo é sobreviver o máximo de turnos possível, acumulando o máximo de comida. A pontuação final tem em conta o número de turnos jogados e a comida disponível no último turno.

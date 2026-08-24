@@ -71,6 +71,7 @@ Testar o funcionamento do git.
 ## Sessão 4 - 24/08/2026
 **🔧Funcionalidades implementadas hoje:**\
 👍 Afinação das dinâmicas do jogo;\
+👍 Testes de robustez e verificação da atualização das variáveis;\
 👍 Atualização do README.\
 
 **💪Maior dificuldade encontrada e como resolvi (ou não resolvi):**\
@@ -80,7 +81,6 @@ Testar o funcionamento do git.
 🔴 Cores no terminal -> *não implementado* (não é prioritário)\
 
 **🔜Próximo passo planeado:**\
-☝️ Testes finais de robustez do jogo (verificação de loops infinitos, números sem lógica, funções mal implementadas, etc.)\
 ☝️ Embelezamento do jogo (cores, layout do texto, mensagens do jogo, etc.)
 
 **💻Linhas de código escritas hoje (estimativa):**\
