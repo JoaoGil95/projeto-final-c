@@ -67,3 +67,21 @@ Testar o funcionamento do git.
 
 **💻Linhas de código escritas hoje (estimativa):**\
 75-100
+
+## Sessão 4 - 24/08/2026
+**🔧Funcionalidades implementadas hoje:**\
+👍 Afinação das dinâmicas do jogo;\
+👍 Atualização do README.\
+
+**💪Maior dificuldade encontrada e como resolvi (ou não resolvi):**\
+🔴 Integrar as várias funções e variáveis em ficheiros .c ou .h -> *Não implementado*\
+✅ Dinâmica do jogo; perceber as condições iniciais, probabilidades dos eventos e custos/regenerações/consumos mais adequados para tornar o jogo equilibrado (nem demasiado dificil, nem demasiado fácil) -> *Resolvido*\
+✅ Inflação e desgaste: à medida que o jogo avança, os custos das melhorias e o consumo de água são cada vez maiores -> *Resolvido*\
+🔴 Cores no terminal -> *não implementado* (não é prioritário)\
+
+**🔜Próximo passo planeado:**\
+☝️ Testes finais de robustez do jogo (verificação de loops infinitos, números sem lógica, funções mal implementadas, etc.)\
+☝️ Embelezamento do jogo (cores, layout do texto, mensagens do jogo, etc.)
+
+**💻Linhas de código escritas hoje (estimativa):**\
+20-30

@@ -17,16 +17,10 @@ int capacidade_agua; // reservatório de água
 int regen_agua;      // regeneração de água
 int consumo_agua;    // consumo de água das culturas
 
-int fertilizante; // sacos de fertilizante
-int comida;       // unidades de comida
-int regen_comida; // regeneração de comida
-bool divino;      // proteção divina
-
-//-coisas a fazer (se tiver tempo)-//
-// variáveis de produção com define
-// define chuva - regeneração natural
-// define os vários custos das melhorias
-// meter define das condições iniciais?
+int fertilizante;       // sacos de fertilizante
+int comida;             // unidades de comida
+int regen_comida_extra; // regeneração extra comida fertilizante
+bool divino;            // proteção divina
 
 //---listagem das funções---//
 // funções recorrentes do jogo
@@ -37,10 +31,10 @@ void analisar_quinta(char quinta[TAMANHO][TAMANHO]);
 void crescer_sementes(char quinta[TAMANHO][TAMANHO]);
 
 // funções do menu (ações do jogo)
-void plantar_semente(char quinta[TAMANHO][TAMANHO]); // planta uma semente
+void plantar_semente(char quinta[TAMANHO][TAMANHO]);
 void usar_fertilizante(void);
 void melhorias(void);
-void recursos_quinta(void); // faz todas as ações necessárias
+void recursos_quinta(void);
 
 // funções aleatórias do jogo (eventos e intempéries)
 int evento_intemperie(void);
@@ -50,13 +44,12 @@ void passaros(void);
 void furo_deposito(void);
 
 // função de pontuação do jogo
-void fim_do_jogo(void); // calcula pontuação
+void fim_do_jogo(void);
 
 //***---O JOGO---***//
 int main(void)
 {
     srand(time(NULL));
-    /*
     usleep(500000);
     printf("Com que então decidiste jogar a Quinta da Sobrevivência...\n");
     usleep(2000000);
@@ -64,46 +57,6 @@ int main(void)
     usleep(2000000);
     printf("Começas com uma cultura e alguns recursos. Sobrevive o máximo tempo possível. Boa sorte!\n");
     usleep(2000000);
-
-    usleep(500000);
-    printf("            _\\,;;;;;;;,/_\n");
-    usleep(500000);
-    printf("         .-\"; ;;;;;;;;; ;\"-.\n");
-    usleep(500000);
-    printf("         '.__/`_ / \\ _`\\__.'\n");
-    usleep(500000);
-    printf("            | (')| |(') |\n");
-    usleep(500000);
-    printf("            | .--' '--. |\n");
-    usleep(500000);
-    printf("            |/ o     o \\|\n");
-    usleep(500000);
-    printf("            |           |\n");
-    usleep(500000);
-    printf("           / \\ _..=.._ / \\\n");
-    usleep(500000);
-    printf("          /:. '._____.'   \\\n");
-    usleep(500000);
-    printf("         ;::'    / \\      .;\n");
-    usleep(500000);
-    printf("         |     _|_ _|_   ::|\n");
-    usleep(500000);
-    printf("       .-|     '==o=='    '|-.\n");
-    usleep(500000);
-    printf("      /  |  . /       \\    |  \\\n");
-    usleep(500000);
-    printf("      |  | ::|         |   | .|\n");
-    usleep(500000);
-    printf("      |  (  ')         (.  )::|\n");
-    usleep(500000);
-    printf("      |: |   |; U U U ;|:: | `|\n");
-    usleep(500000);
-    printf("      |' |   | \\ U U / |'  |  |\n");
-    usleep(500000);
-    printf("      ##V|   |_/`\"\"\"`\\_|   |V##\n");
-    usleep(500000);
-    printf("jgs      ##V##         ##V##\n");
-    usleep(500000); */
 
     // iniciar a quinta
     iniciar_quinta(quinta);
@@ -192,6 +145,7 @@ int main(void)
                 return 0;
             }
             turno++;
+            analisar_quinta(quinta); // serve atualizar desgaste
             break;
 
         case 0:
@@ -211,6 +165,7 @@ int main(void)
 }
 //---***FIM DO JOGO***---//
 
+//-execução das funções-//
 void iniciar_quinta(char quinta[TAMANHO][TAMANHO])
 {
     for (int i = 0; i < TAMANHO; i++)
@@ -227,19 +182,21 @@ void iniciar_quinta(char quinta[TAMANHO][TAMANHO])
     fertilizante = FERTILIZANTE_INICIAL;
     comida = COMIDA_INICIAL;
     regen_agua = REGEN_AGUA_INICIAL;
+    regen_comida_extra = 0;
     turno = 1;
     divino = false;
 }
 
 void specs_quinta(void)
 {
+    printf("\n");
     printf("Turno: %d\n", turno);
     printf("=== RECURSOS ===\n");
     printf("Sementes: %d | Água: %d/%d | Fertilizante: %d | Comida: %d\n",
            sementes, agua, capacidade_agua, fertilizante, comida);
     printf("================\n");
     printf("Prod. água: %d | Prod. comida: %d | Prod. sementes: %d\n",
-           regen_agua - consumo_agua, regen_comida, regen_sementes);
+           regen_agua - consumo_agua, (contador_culturas * REGEN_COMIDA_CULTURA) + regen_comida_extra, regen_sementes);
 }
 
 void print_quinta(char quinta[TAMANHO][TAMANHO])
@@ -282,7 +239,7 @@ void usar_fertilizante(void)
 {
     if (fertilizante > 0)
     {
-        regen_comida += REGEN_COMIDA_FERTILIZANTE;
+        regen_comida_extra += REGEN_COMIDA_FERTILIZANTE;
         fertilizante--;
         return;
     }
@@ -293,12 +250,13 @@ void melhorias(void)
 {
     while (1)
     {
+        int aumento = turno / TURNOS_INFLACAO; // inflação
         // mostrar menu
         printf("\nMelhoria:\n");
-        printf("1. Regadio: +%d regen. água. Custa %d comidas.\n", AGUA_REGADIO, CUSTO_REGADIO);
-        printf("2. Depósito melhorado: +%d capacidade de água. Custa %d comidas.\n", CAPACIDADE_DEPOSITO, CUSTO_DEPOSITO);
-        printf("3. Saco fertilizante. +%d regen. comida. Custa %d comida.\n", COMIDA_FERTILIZANTE, CUSTO_FERTILIZANTE);
-        printf("4. Proteção divina. Protege-te de qualquer intempérie num turno. Custa %d comidas.\n", CUSTO_DIVINO);
+        printf("1. Regadio: +%d regen. água. Custa %d comidas.\n", AGUA_REGADIO, CUSTO_REGADIO + aumento);
+        printf("2. Depósito melhorado: +%d capacidade de água. Custa %d comidas.\n", CAPACIDADE_DEPOSITO, CUSTO_DEPOSITO + aumento);
+        printf("3. Saco fertilizante. +%d regen. comida. Custa %d comida.\n", COMIDA_FERTILIZANTE, CUSTO_FERTILIZANTE + aumento);
+        printf("4. Proteção divina. Protege-te de qualquer intempérie num turno. Custa %d comidas.\n", CUSTO_DIVINO + aumento);
         printf("0. Voltar à quinta\n");
 
         scanf("%d", &opcao_melhoria);
@@ -307,43 +265,43 @@ void melhorias(void)
         switch (opcao_melhoria)
         {
         case 1: // regadio
-            if (comida < CUSTO_REGADIO)
+            if (comida < CUSTO_REGADIO + aumento)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
             regen_agua += AGUA_REGADIO;
-            comida -= CUSTO_REGADIO;
+            comida -= CUSTO_REGADIO + aumento;
             break;
 
         case 2: // depósito
-            if (comida < CUSTO_DEPOSITO)
+            if (comida < CUSTO_DEPOSITO + aumento)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
             capacidade_agua += CAPACIDADE_DEPOSITO;
-            comida -= CUSTO_DEPOSITO;
+            comida -= CUSTO_DEPOSITO + aumento;
             break;
 
         case 3: // saco fertilizante
-            if (comida < CUSTO_FERTILIZANTE)
+            if (comida < CUSTO_FERTILIZANTE + aumento)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
             }
             fertilizante += COMIDA_FERTILIZANTE;
-            comida -= CUSTO_FERTILIZANTE;
+            comida -= CUSTO_FERTILIZANTE + aumento;
             break;
 
         case 4: // proteção divina
-            if (divino == false && comida >= CUSTO_DIVINO)
+            if (divino == false && comida >= CUSTO_DIVINO + aumento)
             {
                 divino = true;
-                comida -= CUSTO_DIVINO;
+                comida -= CUSTO_DIVINO + aumento;
                 break;
             }
-            else if (comida < CUSTO_DIVINO)
+            else if (comida < CUSTO_DIVINO + aumento)
             {
                 printf("Não tens comida suficiente.\n");
                 break;
@@ -367,6 +325,7 @@ void melhorias(void)
 
 void analisar_quinta(char quinta[TAMANHO][TAMANHO]) // ver o que têm os hectares de terreno
 {
+    int desgaste = turno / TURNOS_INFLACAO; // aumento dos consumos
     // conta as culturas
     contador_culturas = 0;
     for (int i = 0; i < TAMANHO; i++)
@@ -379,8 +338,8 @@ void analisar_quinta(char quinta[TAMANHO][TAMANHO]) // ver o que têm os hectare
             }
         }
     }
-    consumo_agua = contador_culturas * CONSUMO_AGUA_CULTURA;
-    regen_comida = contador_culturas * REGEN_COMIDA_CULTURA;
+    consumo_agua = contador_culturas * (CONSUMO_AGUA_CULTURA + desgaste);
+    // regen_comida = (contador_culturas * REGEN_COMIDA_CULTURA) + regen_comida_extra;
     regen_sementes = contador_culturas * REGEN_SEMENTES_CULTURA;
 }
 
@@ -389,7 +348,7 @@ void recursos_quinta(void)
     // atualizar recursos com consumos e regenerações (comida, água, sementes)
     printf("A actualizar os recursos da quinta...\n");
     usleep(1000000);
-    comida += regen_comida;
+    comida += (contador_culturas * REGEN_COMIDA_CULTURA) + regen_comida_extra;
     sementes += regen_sementes;
     agua += regen_agua - consumo_agua;
     if (agua >= capacidade_agua)
@@ -400,7 +359,7 @@ void recursos_quinta(void)
 
 int evento_intemperie(void)
 {
-    int evento = (rand() % 100) + 1; // gera um número entre 1 e 100
+    evento = (rand() % 100) + 1; // gera um número entre 1 e 100
 
     if (evento <= PROB_SEM_EVENTO) // não ocorre nenhum evento
     {

@@ -6,7 +6,7 @@ O objetivo é sobreviver o máximo de turnos possível, acumulando o máximo de 
 
 ## Jogar o jogo
 ### Início do jogo
-A tua quinta tem 9 hectares (3x3) e começas com uma cultura já crescida. Tens ainda um depósito de água de 100 L a 50% da capacidade, 1 semente e 1 saco de fertilizante. Existe uma regeneração de água natural de 1 litro por turno.
+A tua quinta tem 16 hectares (4x4) e começas com uma cultura já crescida. Tens ainda um depósito de água de 20 L a 50% da capacidade, 2 sementes e 1 saco de fertilizante. Existe uma regeneração de água natural de 1 L por turno.
 
 ### Jogar um turno
 Em cada turno, podes:
@@ -20,6 +20,7 @@ Não há limite no número de ações que se podem fazer (1 a 3). A opção 4 é
 * Uma semente plantada cresce no turno seguinte e consome 1 litro de água.
 * Uma cultura crescida consome 3 litros de água por turno, mas produz 1 unidade de comida por turno e 1 semente por turno.
 * Usar fertilizante aumenta a produção de comida em 1.
+* A cada 5 turnos, os custos das melhorias aumentam e as culturas consomem mais água (desgaste da quinta).
 
 ### Eventos e intempéries
 Em cada turno, pode ocorrer um dos seguintes eventos:
@@ -29,10 +30,10 @@ Em cada turno, pode ocorrer um dos seguintes eventos:
 * Furo no depósito: perdes um terço da água. PODE CAUSAR FIM DO JOGO!
 
 ### Melhorias
-* Regadio: aumenta regeneração da água. Custa 2 comidas.
-* Depósito melhorado: aumenta a capacidade do deṕosito em 10 L. Custa 4 comidas.
-* Saco fertilizante: compras 1 saco de fertilizante. Custa 1 comida.
-* Proteção divina: protege-te da intempérie que surgir. Custa 10 comidas. Só podes ter uma proteção activa.
+* Regadio: aumenta regeneração da água.
+* Depósito melhorado: aumenta a capacidade do deṕosito em 10 L.
+* Saco fertilizante: compras 1 saco de fertilizante.
+* Proteção divina: protege-te da intempérie que surgir. Só podes ter uma proteção activa.
 
 ## Fim do jogo
 O jogo termina quando ocorrer uma das seguintes situações:

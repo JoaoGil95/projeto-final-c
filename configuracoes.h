@@ -10,16 +10,16 @@
 //---//
 
 //-variáveis iniciais de jogo-//
-#define SEMENTES_INICIAL 10
-#define AGUA_INICIAL 100
-#define DEPOSITO_INICIAL 200
-#define COMIDA_INICIAL 2
+#define SEMENTES_INICIAL 2
+#define AGUA_INICIAL 10
+#define DEPOSITO_INICIAL 20
+#define COMIDA_INICIAL 5
 #define FERTILIZANTE_INICIAL 1
 #define REGEN_AGUA_INICIAL 1
 //---//
 
 //-variáveis da quinta-//
-#define TAMANHO 3
+#define TAMANHO 4
 #define HECTARE_VAZIO '.'
 #define HECTARE_SEMENTE 's'
 #define HECTARE_CULTURA 'C'
@@ -32,7 +32,7 @@
 #define REGEN_SEMENTES_CULTURA 1
 #define CONSUMO_AGUA_SEMENTE 1
 #define REGEN_COMIDA_FERTILIZANTE 1
-
+#define TURNOS_INFLACAO 5 // serve para desgaste e aumento nos custos
 //---//
 
 //-Melhorias-//
@@ -58,9 +58,9 @@
 
 // Probabilidades (Acumulados até 100)
 #define PROB_SEM_EVENTO 50 // 1 a 50 (50%)
-#define PROB_TEMPESTADE 70 // 51 a 70 (20%)
-#define PROB_SECA 80       // 71 a 80 (10%)
-#define PROB_PASSAROS 90   // 81 a 90 (10%)
+#define PROB_TEMPESTADE 65 // 51 a 65 (15%)
+#define PROB_SECA 78       // 66 a 78 (13%)
+#define PROB_PASSAROS 90   // 79 a 90 (12%)
 #define PROB_FURO 100      // 91 a 100 (10%)
 
 // danos específicos
